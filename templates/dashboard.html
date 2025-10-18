@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}대시보드 · 스튜디오 소담{% endblock %}
+{% block content %}
+<h1>대시보드</h1>
+<section class="grid stats">
+  <article>
+    <h3>전체 클라이언트</h3>
+    <p class="metric">{{ client_count }}</p>
+  </article>
+  <article>
+    <h3>진행 중 프로젝트</h3>
+    <p class="metric">{{ active_projects }}</p>
+  </article>
+  <article>
+    <h3>미수금 인보이스</h3>
+    <p class="metric">{{ outstanding_invoices }}</p>
+  </article>
+</section>
+
+<section class="grid dashboard-grid">
+  <article>
+    <header>
+      <h2>다가오는 프로젝트</h2>
+    </header>
+    {% if upcoming_projects %}
+    <table>
+      <thead>
+        <tr>
+          <th>프로젝트</th>
+          <th>클라이언트</th>
+          <th>킥오프</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in upcoming_projects %}
+        <tr>
+          <td>{{ project.name }}</td>
+          <td><a href="{{ url_for('client_detail', client_id=project.client.id) }}">{{ project.client.company_name }}</a></td>
+          <td>{{ project.kickoff_date.strftime('%Y-%m-%d') if project.kickoff_date else '일정 미정' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>등록된 프로젝트 일정이 없습니다.</p>
+    {% endif %}
+  </article>
+
+  <article>
+    <header>
+      <h2>최근 메시지</h2>
+    </header>
+    {% if recent_messages %}
+      <ul class="timeline">
+        {% for message in recent_messages %}
+        <li>
+          <strong>{{ message.client.company_name }}</strong>
+          <p>{{ message.content }}</p>
+          <small>{{ message.author }} • {{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>아직 주고받은 메시지가 없습니다.</p>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}

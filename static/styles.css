@@ -1,0 +1,171 @@
+body {
+  background-color: #f5f7fb;
+}
+
+.topbar {
+  background: #1f2933;
+  color: white;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+.topbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar a {
+  color: #f5f7fb;
+}
+
+.brand {
+  font-size: 1.2rem;
+}
+
+.flash-area article {
+  margin-bottom: 0.5rem;
+}
+
+.flash-area .success {
+  border-left: 3px solid #2dce89;
+}
+
+.flash-area .warning {
+  border-left: 3px solid #f6c343;
+}
+
+.flash-area .danger {
+  border-left: 3px solid #d9534f;
+}
+
+.flash-area .info {
+  border-left: 3px solid #5bc0de;
+}
+
+.page-header,
+.client-overview,
+.detail-columns,
+.chat {
+  margin-bottom: 2rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-header .actions a {
+  white-space: nowrap;
+}
+
+.stats .metric {
+  font-size: 2.4rem;
+  font-weight: bold;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tabs a {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #d2d6dc;
+  text-decoration: none;
+  color: #1f2933;
+}
+
+.tabs a.active {
+  background: #1f2933;
+  color: white;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.status.active {
+  background: #0275d8;
+  color: white;
+}
+
+.status.inactive {
+  background: #d9534f;
+  color: white;
+}
+
+.timeline {
+  list-style: none;
+  padding-left: 0;
+}
+
+.timeline li {
+  border-bottom: 1px solid #d2d6dc;
+  padding: 0.7rem 0;
+}
+
+.timeline li:last-child {
+  border-bottom: none;
+}
+
+.chat .messages {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  max-height: 320px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.chat .message {
+  border-left: 3px solid #1f2933;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.6rem;
+  background: #f1f5f9;
+}
+
+.chat .meta {
+  font-size: 0.75rem;
+  color: #52606d;
+  margin-bottom: 0.3rem;
+}
+
+.chat .body {
+  font-size: 0.95rem;
+}
+
+.inline-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.inline-form select {
+  min-width: 120px;
+}
+
+.form-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.auth {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.footer {
+  margin-top: 4rem;
+  text-align: center;
+  color: #52606d;
+}
