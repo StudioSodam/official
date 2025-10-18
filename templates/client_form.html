@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}클라이언트 {{ '수정' if client else '등록' }} · 스튜디오 소담{% endblock %}
+{% block content %}
+<h1>클라이언트 {{ '수정' if client else '등록' }}</h1>
+<form method="post" class="grid form-card">
+  <label>
+    회사명
+    <input type="text" name="company_name" value="{{ client.company_name if client else '' }}" required />
+  </label>
+  <label>
+    담당자 이름
+    <input type="text" name="contact_name" value="{{ client.contact_name if client else '' }}" required />
+  </label>
+  <label>
+    이메일
+    <input type="email" name="email" value="{{ client.email if client else '' }}" required />
+  </label>
+  <label>
+    연락처
+    <input type="text" name="phone" value="{{ client.phone if client else '' }}" />
+  </label>
+  <label>
+    업종
+    <input type="text" name="industry" value="{{ client.industry if client else '' }}" />
+  </label>
+  <label>
+    비고
+    <textarea name="notes" rows="4">{{ client.notes if client else '' }}</textarea>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" name="active" value="1" {% if client is none or client.active %}checked{% endif %} />
+    진행 중인 클라이언트로 표시
+  </label>
+  <button type="submit" class="primary">저장하기</button>
+</form>
+{% endblock %}

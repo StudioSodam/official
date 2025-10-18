@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}스튜디오 소담 외주 관리{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container">
+        <strong class="brand">Studio SODAM Admin</strong>
+        {% if session.get('user_id') %}
+        <nav>
+          <ul>
+            <li><a href="{{ url_for('dashboard') }}">대시보드</a></li>
+            <li><a href="{{ url_for('clients') }}">클라이언트</a></li>
+            <li><a href="{{ url_for('profile') }}">프로필</a></li>
+            <li><a href="{{ url_for('logout') }}">로그아웃</a></li>
+          </ul>
+        </nav>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-area">
+            {% for category, message in messages %}
+              <article class="{{ category }}">{{ message }}</article>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="container footer">
+      <small>© {{ now.year }} Studio Sodam. All rights reserved.</small>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}클라이언트 목록 · 스튜디오 소담{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>클라이언트 관리</h1>
+    <p>외주 파트너와의 관계를 한눈에 관리하세요.</p>
+  </div>
+  <div class="actions">
+    <a class="secondary" href="{{ url_for('new_client') }}">+ 새 클라이언트</a>
+  </div>
+</header>
+
+<nav class="tabs">
+  <a class="{{ 'active' if status == 'all' }}" href="{{ url_for('clients', status='all') }}">전체</a>
+  <a class="{{ 'active' if status == 'active' }}" href="{{ url_for('clients', status='active') }}">진행</a>
+  <a class="{{ 'active' if status == 'inactive' }}" href="{{ url_for('clients', status='inactive') }}">보류</a>
+</nav>
+
+<table>
+  <thead>
+    <tr>
+      <th>회사명</th>
+      <th>담당자</th>
+      <th>연락처</th>
+      <th>업종</th>
+      <th>상태</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for client in clients %}
+    <tr>
+      <td><a href="{{ url_for('client_detail', client_id=client.id) }}">{{ client.company_name }}</a></td>
+      <td>{{ client.contact_name }}</td>
+      <td>
+        <span>{{ client.email }}</span><br />
+        <small>{{ client.phone or '-' }}</small>
+      </td>
+      <td>{{ client.industry or '-' }}</td>
+      <td>
+        {% if client.active %}
+          <span class="status active">진행 중</span>
+        {% else %}
+          <span class="status inactive">보류</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="5">등록된 클라이언트가 없습니다.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

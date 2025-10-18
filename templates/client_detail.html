@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}{{ client.company_name }} · 스튜디오 소담{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <h1>{{ client.company_name }}</h1>
+    <p>{{ client.contact_name }} · {{ client.email }}</p>
+  </div>
+  <div class="actions">
+    <a href="{{ url_for('edit_client', client_id=client.id) }}">정보 수정</a>
+  </div>
+</header>
+
+<section class="grid client-overview">
+  <article>
+    <h3>기본 정보</h3>
+    <ul>
+      <li><strong>연락처:</strong> {{ client.phone or '미입력' }}</li>
+      <li><strong>업종:</strong> {{ client.industry or '미입력' }}</li>
+      <li><strong>상태:</strong> {% if client.active %}<span class="status active">진행</span>{% else %}<span class="status inactive">보류</span>{% endif %}</li>
+      <li><strong>등록일:</strong> {{ client.created_at.strftime('%Y-%m-%d') }}</li>
+    </ul>
+    {% if client.notes %}
+    <p class="notes">{{ client.notes }}</p>
+    {% endif %}
+  </article>
+  <article>
+    <h3>프로젝트 추가</h3>
+    <form method="post" action="{{ url_for('add_project', client_id=client.id) }}" class="grid">
+      <input type="text" name="name" placeholder="프로젝트명" required />
+      <select name="status">
+        {% for key, label in PROJECT_STATUSES.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+      <input type="date" name="kickoff_date" />
+      <input type="date" name="delivery_date" />
+      <input type="number" step="0.01" name="budget" placeholder="예산 (원)" />
+      <textarea name="description" rows="3" placeholder="프로젝트 설명"></textarea>
+      <button type="submit" class="primary">프로젝트 등록</button>
+    </form>
+  </article>
+</section>
+
+<section class="grid detail-columns">
+  <article>
+    <header>
+      <h2>진행 프로젝트</h2>
+    </header>
+    {% if client.projects %}
+    <table>
+      <thead>
+        <tr>
+          <th>프로젝트</th>
+          <th>상태</th>
+          <th>킥오프</th>
+          <th>납기</th>
+          <th>예산</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in client.projects|sort(attribute='delivery_date') %}
+        <tr>
+          <td>{{ project.name }}</td>
+          <td>{{ PROJECT_STATUSES.get(project.status, project.status) }}</td>
+          <td>{{ project.kickoff_date.strftime('%Y-%m-%d') if project.kickoff_date else '미정' }}</td>
+          <td>{{ project.delivery_date.strftime('%Y-%m-%d') if project.delivery_date else '미정' }}</td>
+          <td>{{ "{:,.0f}".format(project.budget) + '원' if project.budget else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>등록된 프로젝트가 없습니다.</p>
+    {% endif %}
+  </article>
+
+  <article>
+    <header>
+      <h2>결제 현황</h2>
+    </header>
+    <form method="post" action="{{ url_for('add_invoice', client_id=client.id) }}" class="grid">
+      <input type="text" name="title" placeholder="결제 항목" required />
+      <input type="number" step="0.01" name="amount" placeholder="금액" required />
+      <input type="date" name="due_date" />
+      <select name="status">
+        {% for key, label in INVOICE_STATUSES.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">결제 등록</button>
+    </form>
+    {% if client.invoices %}
+    <table>
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th>금액</th>
+          <th>상태</th>
+          <th>마감</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for invoice in client.invoices|sort(attribute='due_date') %}
+        <tr>
+          <td>{{ invoice.title }}</td>
+          <td>{{ "{:,.0f}".format(invoice.amount) }}원</td>
+          <td>{{ invoice.status }}</td>
+          <td>{{ invoice.due_date.strftime('%Y-%m-%d') if invoice.due_date else '미정' }}</td>
+          <td>
+            <form method="post" action="{{ url_for('update_invoice_status', client_id=client.id, invoice_id=invoice.id) }}" class="inline-form">
+              <select name="status">
+                {% for key, label in INVOICE_STATUSES.items() %}
+                <option value="{{ key }}" {% if invoice.status == key %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+              <button type="submit">변경</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>등록된 결제 정보가 없습니다.</p>
+    {% endif %}
+  </article>
+</section>
+
+<section class="chat">
+  <header>
+    <h2>클라이언트 커뮤니케이션</h2>
+  </header>
+  <div class="messages">
+    {% for message in client.messages|sort(attribute='created_at', reverse=true) %}
+    <div class="message">
+      <div class="meta">{{ message.author }} • {{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+      <div class="body">{{ message.content }}</div>
+    </div>
+    {% else %}
+    <p>주고받은 메시지가 없습니다. 첫 메시지를 남겨보세요.</p>
+    {% endfor %}
+  </div>
+  <form method="post" class="grid">
+    <textarea name="content" rows="3" placeholder="메시지를 입력하세요." required></textarea>
+    <button type="submit" class="primary">메시지 전송</button>
+  </form>
+</section>
+{% endblock %}
